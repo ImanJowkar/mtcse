@@ -50,7 +50,17 @@ set 0 action=remote
 set 1 action=remote
 set 2 action=remote
 
-
-
-
 ```
+
+## packet-flow
+![img](img/packetflow-digram.PNG)
+------------- ---------- 
+![img](img/Bridging.jpg)
+-------------- ----------
+![img](img/MPLS.jpg)
+-------------- ----------
+![img](img/Routing.jpg)
+
+
+-------------- -----------
+![img](img/chains.png)
