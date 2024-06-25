@@ -123,7 +123,7 @@ add action=drop chain=forward in-interface=bridge1 log=yes log-prefix=LAN_!LAN s
 
 
 
-`The following rules are employed to identify the source IP address attempting to port-scan our router.`
+`The following rules are employed to identify the source IP address attempting to port-scan our router and block it`
 ```
 /ip firewall mangle
 add action=add-src-to-address-list address-list=port-scan address-list-timeout=\
