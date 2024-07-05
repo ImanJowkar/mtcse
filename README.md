@@ -229,3 +229,109 @@ add action=drop chain=prerouting dst-address-list=ddos-target src-address-list=d
 ```
 
 
+
+## Strong Crypto in ssh
+If you have opened the SSH port on your MikroTik, make sure to enable strong cryptography.
+
+![img](img/ssh.png)
+
+```
+ip/ssh/set strong-crypto=yes 
+system/reboot
+
+```
+
+
+## DHCP 
+
+If you run a DHCP server on MikroTik RouterOS, always enable DHCP alerts.
+```
+
+
+/ip dhcp-server alert
+add disabled=no interface=WAN-Interface valid-server=13:32:27:5:82:AC
+
+```
+
+
+## port knocking
+
+```
+
+
+
+
+
+
+
+
+
+```
+
+
+## detect Brute force attack
+
+```
+
+/ip firewall filter
+add action=drop chain=input log=yes src-address-list="Black List (SSH)"
+add action=jump chain=input dst-port=22 jump-target="SSH-Chain " protocol=tcp
+add action=add-src-to-address-list address-list="Black List (SSH)" address-list-timeout=4w2d chain="SSH-Chain " connection-state=new src-address-list=G3
+add action=add-src-to-address-list address-list=G3 address-list-timeout=1m chain="SSH-Chain " connection-state=new src-address-list=G2
+add action=add-src-to-address-list address-list=G2 address-list-timeout=1m chain="SSH-Chain " connection-state=new src-address-list=G1
+add action=add-src-to-address-list address-list=G1 address-list-timeout=1m chain="SSH-Chain " connection-state=new
+add action=return chain="SSH-Chain "
+
+
+
+```
+
+
+## detect ping flood
+
+```
+
+/ip firewall filter
+add action=accept chain=input limit=2,5:packet protocol=icmp
+add action=drop chain=input protocol=icmp
+
+-------------------
+
+/ip firewall filter
+add action=drop chain=input dst-address-type=broadcast protocol=icmp
+
+```
+
+
+## lets-encrypt certifacte
+
+```
+
+
+
+```
+
+
+## self-sgin certificate
+
+```
+
+# 1) enable ntp client on your router
+set enabled=yes
+/system ntp client servers
+add address=ntp.server.com
+
+
+# 2) set correct time-zone
+/system clock
+set time-zone-name=<saflkjsdf>
+
+
+
+# 3) generate CA
+
+
+
+
+
+```
