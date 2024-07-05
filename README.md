@@ -171,6 +171,14 @@ add action=drop chain=input src-address-list=vpn-authentication-faild3
 
 ```
 
+/ip firewall filter
+add action=jump chain=input connection-state=new jump-target=detect-ddos
+add action=return chain=detect-ddos dst-limit=32,32,src-and-dst-addresses/10s
+add action=add-dst-to-address-list address-list=ddos-target address-list-timeout=10m chain=detect-ddos
+add action=add-src-to-address-list address-list=ddos-attackers address-list-timeout=10m chain=detect-ddos
+
+/ip firewall raw
+add action=drop chain=prerouting dst-address-list=ddos-target src-address-list=ddos-attackers
 
 
 
@@ -178,3 +186,46 @@ add action=drop chain=input src-address-list=vpn-authentication-faild3
 
 
 ```
+
+
+
+## IP range in each country
+You can visit this resource to get the full range of IP addresses used by each country.
+[get ip address](https://mikrotikconfig.com/firewall/)
+
+
+```
+import IP-Firewall-Address-List.rsc
+# Now you can restrict access to a specific range of source addresses.
+
+
+```
+
+
+
+## detect and drop TCP SYN attack
+
+```
+# sloution 1
+/ip firewall filter
+add action=add-src-to-address-list address-list="SYN Attacker" address-list-timeout=none-dynamic chain=input connection-limit=20,32 protocol=tcp tcp-flags=syn
+add action=tarpit chain=input protocol=tcp src-address-list="SYN Attacker“
+
+------------------------------
+
+# sloution2: is the same as ddos attack solution
+
+/ip firewall filter
+add action=jump chain=input connection-state=new jump-target=detect-ddos
+add action=return chain=detect-ddos dst-limit=32,32,src-and-dst-addresses/10s protocol=tcp tcp-flags=syn,ack
+add action=add-dst-to-address-list address-list=ddos-target address-list-timeout=10m chain=detect-ddos
+add action=add-src-to-address-list address-list=ddos-attackers address-list-timeout=10m chain=detect-ddos
+
+/ip firewall raw
+add action=drop chain=prerouting dst-address-list=ddos-target src-address-list=ddos-attackers
+
+
+
+```
+
+
