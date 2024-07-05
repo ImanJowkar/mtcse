@@ -43,12 +43,12 @@ add action=drop chain=input dst-port=53 in-interface=WAN-Interface protocol=udp
 
 ```
 /system logging action
-add name=SyslogServerRockyLinux remote=192.168.56.102 src-address=\
-    192.168.56.105 target=remote
+add name=SyslogServerRockyLinux remote=192.168.56.102 src-address=192.168.56.105 target=remote
+
 /system logging
-set 0 action=remote
-set 1 action=remote
-set 2 action=remote
+set 0 action=SyslogServerRockyLinux
+set 1 action=SyslogServerRockyLinux
+set 2 action=SyslogServerRockyLinux
 
 ```
 
@@ -83,6 +83,7 @@ add address=10.10.10.1-10.10.10.30 list=allowed_to_router
 
 ```
 
+## Invalid WAN IP addresses
 `The following address list is invalid in the WAN network.`
 
 ```
@@ -143,18 +144,26 @@ its good to drop packets in `raw table` like above.
 /ip firewall mangle
 add action=add-dst-to-address-list address-list=vpn-authentication-faild3 \
     address-list-timeout=1h1m chain=output comment=\
-    ssh-web-authentication-failure-finder3 content="authentication failed" \
+    vpn-authentication-failure-finder3 content="authentication failed" \
     dst-address-list=vpn-authentication-faild2
 add action=add-dst-to-address-list address-list=vpn-authentication-faild2 \
     address-list-timeout=1m chain=output comment=\
-    ssh-web-authentication-failure-finder2 content="authentication failed" \
+    vpn-authentication-failure-finder2 content="authentication failed" \
     dst-address-list=vpn-authentication-faild1
 add action=add-dst-to-address-list address-list=vpn-authentication-faild1 \
     address-list-timeout=1m chain=output comment=\
-    ssh-web-authentication-failure-finder1 content="authentication failed"
+    vpn-authentication-failure-finder1 content="authentication failed"
 
 /ip firewall filter
 add action=drop chain=input src-address-list=vpn-authentication-faild3
+
+
+```
+
+
+## DDOS attack finder and block
+
+```
 
 
 ```
