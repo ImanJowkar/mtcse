@@ -123,7 +123,7 @@ add action=drop chain=forward in-interface=bridge1 log=yes log-prefix=LAN_!LAN s
 ```
 
 
-
+## port-scan
 `The following rules are employed to identify the source IP address attempting to port-scan our router and block it`
 ```
 /ip firewall mangle
@@ -132,10 +132,13 @@ add action=add-src-to-address-list address-list=port-scan address-list-timeout=\
 /ip firewall raw
 add action=drop chain=prerouting src-address-list=port-scan
 
+# or we can use action=tarpit
 ```
 its good to drop packets in `raw table` like above.
 
 
+
+# detect vpn login failure more than 3 times
 `Identify the source IP that is making repeated attempts with incorrect usernames and passwords through VPNS.`
 
 ```
@@ -161,9 +164,17 @@ add action=drop chain=input src-address-list=vpn-authentication-faild3
 ```
 
 
+
 ## DDOS attack finder and block
 
+![img](img/ddos.png)
+
 ```
+
+
+
+
+
 
 
 ```
